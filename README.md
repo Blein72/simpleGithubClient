@@ -7,14 +7,9 @@ Adnroid app that allow to get github users list and view detail info on each use
 Simple architecture with MVVM pattern without domain layer(project is too simple at this moment).
 
 ## Libraries
-Retrofit\n
-Coil\n
-Hilt\n
-Compose
+Retrofit ,Coil, Hilt, Compose
 
-Testing
-Mockk
-JUnit4
+Testing: Mockk, JUnit4
 
 ## Future possible improvements
 1) Introduce domain layer(use cases)
