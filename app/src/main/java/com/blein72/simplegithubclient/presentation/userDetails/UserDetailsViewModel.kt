@@ -57,7 +57,8 @@ class UserDetailsViewModel @Inject constructor(private val repository: UsersRepo
     private fun showErrorDialog(error: String) {
         _state.update { data -> data.copy(
             showLoading = false,
-            showErrorDialog = true
+            showErrorDialog = true,
+            errorMessage = error
         ) }
     }
 

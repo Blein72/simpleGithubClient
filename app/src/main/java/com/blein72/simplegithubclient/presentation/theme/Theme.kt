@@ -1,6 +1,5 @@
 package com.blein72.simplegithubclient.presentation.theme
 
-import android.app.Activity
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme

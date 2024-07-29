@@ -3,16 +3,15 @@ package com.blein72.simplegithubclient.data
 import com.blein72.simplegithubclient.data.datasource.UsersRemoteDataSource
 import com.blein72.simplegithubclient.data.model.User
 import com.blein72.simplegithubclient.data.model.UserDetail
-import com.blein72.simplegithubclient.util.Result
 import com.blein72.simplegithubclient.testdata.TEST_USER_DETAILS_DATA
 import com.blein72.simplegithubclient.testdata.TEST_USER_LIST_DATA
+import com.blein72.simplegithubclient.util.Result
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
 import junit.framework.TestCase.assertEquals
 import junit.framework.TestCase.assertTrue
 import kotlinx.coroutines.runBlocking
-import okhttp3.MediaType
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.ResponseBody
 import org.junit.Before

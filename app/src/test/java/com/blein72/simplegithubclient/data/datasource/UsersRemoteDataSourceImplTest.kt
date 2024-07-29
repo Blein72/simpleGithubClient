@@ -45,7 +45,7 @@ class UsersRemoteDataSourceImplTest {
             coEvery { api.getUsersList() } throws expectedResponse
 
             // When
-            val result = usersRemoteDataSource.getUsersList()
+            usersRemoteDataSource.getUsersList()
 
             // Assert
             coVerify { api.getUsersList() }
@@ -75,7 +75,7 @@ class UsersRemoteDataSourceImplTest {
             coEvery { api.getUserDetails(userName) } throws expectedResponse
 
             // When
-            val result = usersRemoteDataSource.getUserDetails(userName)
+            usersRemoteDataSource.getUserDetails(userName)
 
             // Assert
             coVerify { api.getUsersList() }
