@@ -1,4 +1,4 @@
-package com.blein72.simplegithubclient.ui.theme
+package com.blein72.simplegithubclient.presentation.theme
 
 import android.app.Activity
 import android.os.Build

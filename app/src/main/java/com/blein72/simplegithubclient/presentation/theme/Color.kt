@@ -1,4 +1,4 @@
-package com.blein72.simplegithubclient.ui.theme
+package com.blein72.simplegithubclient.presentation.theme
 
 import androidx.compose.ui.graphics.Color
 
