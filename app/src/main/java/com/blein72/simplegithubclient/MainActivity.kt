@@ -3,7 +3,9 @@ package com.blein72.simplegithubclient
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.rememberNavController
@@ -17,9 +19,13 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             SimpleGithubClientTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { _ ->
+                Scaffold(modifier = Modifier.fillMaxSize()) { padding ->
                     val navHostController = rememberNavController()
-                    AppNavHost(navHostController)
+                    Column(modifier = Modifier
+                        .padding(padding)) {
+                        AppNavHost(navHostController)
+                    }
+
                 }
             }
         }
