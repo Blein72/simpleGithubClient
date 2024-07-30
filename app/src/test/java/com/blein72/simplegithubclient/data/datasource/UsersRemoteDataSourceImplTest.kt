@@ -51,7 +51,7 @@ class UsersRemoteDataSourceImplTest {
             coVerify { api.getUsersList() }
         }
 
-    @Test()
+    @Test
     fun `getUserDetails should return response from api`() = runTest {
         // Given
         val userName = "userName"
