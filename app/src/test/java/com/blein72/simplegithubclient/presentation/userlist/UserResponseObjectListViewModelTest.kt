@@ -3,6 +3,7 @@ package com.blein72.simplegithubclient.presentation.userlist
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.blein72.simplegithubclient.data.UsersRepository
 import com.blein72.simplegithubclient.testdata.TEST_USER_LIST_DATA
+import com.blein72.simplegithubclient.testdata.TEST_USER_RESPONSE_LIST_DATA
 import com.blein72.simplegithubclient.util.Result
 import io.mockk.coEvery
 import io.mockk.coVerify
@@ -21,7 +22,7 @@ import org.junit.Rule
 import org.junit.Test
 
 @OptIn(ExperimentalCoroutinesApi::class)
-class UserListViewModelTest {
+class UserResponseObjectListViewModelTest {
 
     @get:Rule
     val instantTaskExecutorRule = InstantTaskExecutorRule()

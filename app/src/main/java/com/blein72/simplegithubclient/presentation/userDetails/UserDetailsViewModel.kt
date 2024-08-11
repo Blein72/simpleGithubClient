@@ -3,7 +3,8 @@ package com.blein72.simplegithubclient.presentation.userDetails
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.blein72.simplegithubclient.data.UsersRepository
-import com.blein72.simplegithubclient.data.model.UserDetail
+import com.blein72.simplegithubclient.data.datasource.api.response.UserDetailResponseObject
+import com.blein72.simplegithubclient.data.model.UserDetailData
 import com.blein72.simplegithubclient.util.Result
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
@@ -68,7 +69,7 @@ class UserDetailsViewModel @Inject constructor(
 
     data class State(
         val showLoading: Boolean = false,
-        val userDetail: UserDetail? = null,
+        val userDetail: UserDetailData? = null,
         val showErrorDialog: Boolean = false,
         val errorMessage: String? = null
     )

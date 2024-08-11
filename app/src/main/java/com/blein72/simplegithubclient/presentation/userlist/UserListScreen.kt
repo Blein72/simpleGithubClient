@@ -22,13 +22,15 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
-import com.blein72.simplegithubclient.data.model.User
+import com.blein72.simplegithubclient.R
+import com.blein72.simplegithubclient.data.model.UserData
 import com.blein72.simplegithubclient.presentation.userDetails.USER_DETAIL_SCREEN_PATH
 
 
@@ -76,14 +78,19 @@ fun UserListScreen(
                 modifier = Modifier
                     .align(Alignment.Center)
             ) {
-                Text(text = "Something went wrong: ${state.errorMessage.orEmpty()}. Tou can try to reload data")
+                Text(
+                    text = stringResource(
+                        R.string.something_went_wrong_tou_can_try_to_reload_data_with_error,
+                        state.errorMessage.orEmpty()
+                    )
+                )
                 Button(
                     onClick = {
                         viewModel.getUserList()
                         viewModel.hideErrorDialog()
                     }
                 ) {
-                    Text(text = "Reload")
+                    Text(text = stringResource(R.string.basic_dialog_error_reload))
                 }
             }
         }
@@ -92,13 +99,12 @@ fun UserListScreen(
 
 @Composable
 private fun UserListScreenContent(
-    userList: List<User>,
+    userList: List<UserData>,
     onItemClicked: (String?) -> Unit
 ) {
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
-            .padding(start = 16.dp, end = 16.dp)
     ) {
         items(userList.size) { index ->
             val item = userList[index]
@@ -112,11 +118,12 @@ private fun UserListScreenContent(
 
 @Composable
 private fun UserListItem(
-    user: User,
+    user: UserData,
     onItemClicked: (String?) -> Unit
 ) {
     Row(
         modifier = Modifier
+            .padding(start = 16.dp, end = 16.dp)
             .fillMaxWidth()
             .wrapContentHeight()
             .clickable {
@@ -130,19 +137,19 @@ private fun UserListItem(
                 .height(40.dp)
                 .clip(CircleShape),
             model = user.avatarUrl,
-            contentDescription = "avatar",
+            contentDescription = stringResource(R.string.user_list_content_description_avatar),
             alignment = Alignment.Center
         )
-        Column() {
+        Column {
             Text(
                 modifier = Modifier
                     .padding(top = 10.dp, start = 10.dp),
-                text = user.login.orEmpty()
+                text = user.login
             )
             Text(
                 modifier = Modifier
-                    .padding(top = 10.dp, start = 10.dp, bottom = 10.dp),
-                text = user.url.orEmpty()
+                    .padding(top = 5.dp, start = 10.dp, bottom = 10.dp),
+                text = user.url
             )
 
         }
@@ -184,23 +191,8 @@ private fun UserListItemPreview() {
     )
 }
 
-private val testUserData = User(
-    avatarUrl = null,
-    eventsUrl = null,
-    followersUrl = null,
-    followingUrl = null,
-    gistsUrl = null,
-    gravatarId = null,
-    htmlUrl = null,
-    id = null,
+private val testUserData = UserData(
+    avatarUrl = "avatarUrl",
     login = "Name",
-    nodeId = null,
-    organizationsUrl = null,
-    receivedEventsUrl = null,
-    reposUrl = null,
-    siteAdmin = null,
-    starredUrl = null,
-    subscriptionsUrl = null,
-    type = null,
     url = "profileUrl"
 )

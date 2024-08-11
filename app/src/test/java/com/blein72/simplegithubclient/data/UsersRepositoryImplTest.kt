@@ -1,10 +1,12 @@
 package com.blein72.simplegithubclient.data
 
 import com.blein72.simplegithubclient.data.datasource.UsersRemoteDataSource
-import com.blein72.simplegithubclient.data.model.User
-import com.blein72.simplegithubclient.data.model.UserDetail
+import com.blein72.simplegithubclient.data.datasource.api.response.UserResponseObject
+import com.blein72.simplegithubclient.data.datasource.api.response.UserDetailResponseObject
 import com.blein72.simplegithubclient.testdata.TEST_USER_DETAILS_DATA
+import com.blein72.simplegithubclient.testdata.TEST_USER_DETAILS_RESPONSE_DATA
 import com.blein72.simplegithubclient.testdata.TEST_USER_LIST_DATA
+import com.blein72.simplegithubclient.testdata.TEST_USER_RESPONSE_LIST_DATA
 import com.blein72.simplegithubclient.util.Result
 import io.mockk.coEvery
 import io.mockk.coVerify
@@ -32,8 +34,9 @@ class UsersRepositoryImplTest {
     @Test
     fun `getUsers should return Success when remoteDataSource returns a successful response`() = runBlocking {
         // Given
-        val expectedUsersList = TEST_USER_LIST_DATA
-        val response = Response.success(expectedUsersList)
+        val expectedResult = TEST_USER_LIST_DATA
+        val responseData = TEST_USER_RESPONSE_LIST_DATA
+        val response = Response.success(responseData)
         coEvery { remoteDataSource.getUsersList() } returns response
 
         // When
@@ -41,14 +44,14 @@ class UsersRepositoryImplTest {
 
         // Assert
         assertTrue(result is Result.Success)
-        assertEquals(expectedUsersList, (result as Result.Success).data)
+        assertEquals(expectedResult, (result as Result.Success).data)
         coVerify { remoteDataSource.getUsersList() }
     }
 
     @Test
     fun `getUsers should return Error when remoteDataSource returns an error response`() = runBlocking {
         // Given
-        val response = Response.error<List<User>>(404, responseBody)
+        val response = Response.error<List<UserResponseObject>>(404, responseBody)
         coEvery { remoteDataSource.getUsersList() } returns response
 
         // When
@@ -79,8 +82,9 @@ class UsersRepositoryImplTest {
     fun `getUserDetails should return Success when remoteDataSource returns a successful response`() = runBlocking {
         // Given
         val userName = "userName"
-        val expectedUserDetail = TEST_USER_DETAILS_DATA
-        val response = Response.success(expectedUserDetail)
+        val expectedResult = TEST_USER_DETAILS_DATA
+        val responseData = TEST_USER_DETAILS_RESPONSE_DATA
+        val response = Response.success(responseData)
         coEvery { remoteDataSource.getUserDetails(userName) } returns response
 
         // When
@@ -88,7 +92,7 @@ class UsersRepositoryImplTest {
 
         // Assert
         assertTrue(result is Result.Success)
-        assertEquals(expectedUserDetail, (result as Result.Success).data)
+        assertEquals(expectedResult, (result as Result.Success).data)
         coVerify { remoteDataSource.getUserDetails(userName) }
     }
 
@@ -96,7 +100,7 @@ class UsersRepositoryImplTest {
     fun `getUserDetails should return Error when remoteDataSource returns an error response`() = runBlocking {
         // Given
         val userName = "userName"
-        val response = Response.error<UserDetail>(404,responseBody)
+        val response = Response.error<UserDetailResponseObject>(404,responseBody)
         coEvery { remoteDataSource.getUserDetails(userName) } returns response
 
         // When

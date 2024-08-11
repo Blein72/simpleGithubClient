@@ -3,11 +3,11 @@ package com.blein72.simplegithubclient.presentation.userlist
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.blein72.simplegithubclient.data.UsersRepository
-import com.blein72.simplegithubclient.data.model.User
+import com.blein72.simplegithubclient.data.datasource.api.response.UserResponseObject
+import com.blein72.simplegithubclient.data.model.UserData
 import com.blein72.simplegithubclient.util.Result
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
@@ -69,7 +69,7 @@ class UserListViewModel @Inject constructor(
 
     data class State(
         val showLoading: Boolean = false,
-        val userList: List<User> = emptyList(),
+        val userList: List<UserData> = emptyList(),
         val showErrorDialog: Boolean = false,
         val errorMessage: String? = null
     )

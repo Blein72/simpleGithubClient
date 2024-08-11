@@ -2,7 +2,7 @@ package com.blein72.simplegithubclient.di
 
 import com.blein72.simplegithubclient.data.UsersRepository
 import com.blein72.simplegithubclient.data.UsersRepositoryImpl
-import com.blein72.simplegithubclient.data.datasource.UserApi
+import com.blein72.simplegithubclient.data.datasource.api.UserApi
 import com.blein72.simplegithubclient.data.datasource.UsersRemoteDataSource
 import com.blein72.simplegithubclient.data.datasource.UsersRemoteDataSourceImpl
 import dagger.Module

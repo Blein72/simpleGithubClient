@@ -15,12 +15,13 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.ClickableText
 import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
@@ -31,6 +32,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.style.TextAlign
@@ -43,7 +45,8 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
-import com.blein72.simplegithubclient.data.model.UserDetail
+import com.blein72.simplegithubclient.R
+import com.blein72.simplegithubclient.data.model.UserDetailData
 
 const val USER_DETAIL_SCREEN_PATH = "users_list"
 
@@ -94,14 +97,19 @@ fun UserDetailsScreen(
                 modifier = Modifier
                     .align(Alignment.Center)
             ) {
-                Text(text = "Something went wrong. Tou can try to reload data")
+                Text(
+                    text = stringResource(
+                        R.string.something_went_wrong_tou_can_try_to_reload_data_with_error,
+                        state.errorMessage.orEmpty()
+                    )
+                )
                 Button(
                     onClick = {
                         viewModel.getUserDetail(userName)
                         viewModel.hideErrorDialog()
                     }
                 ) {
-                    Text(text = "Reload")
+                    Text(text = stringResource(R.string.basic_dialog_error_reload))
                 }
             }
         }
@@ -112,7 +120,7 @@ fun UserDetailsScreen(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun UserDetailScreenContent(
-    userDetail: UserDetail?,
+    userDetail: UserDetailData?,
     openUrl: (String) -> Unit,
     backButtonClick: () -> Unit
 ) {
@@ -123,12 +131,12 @@ private fun UserDetailScreenContent(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             TopAppBar(
-                title = { Text(text = "User Details") },
+                title = { Text(text = stringResource(R.string.user_details_top_bar_title)) },
                 navigationIcon = {
                     IconButton(onClick = { backButtonClick() }) {
                         Icon(
-                            imageVector = Icons.Filled.ArrowBack,
-                            contentDescription = "Back"
+                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                            contentDescription = stringResource(R.string.user_details_content_description_back)
                         )
                     }
                 }
@@ -136,30 +144,46 @@ private fun UserDetailScreenContent(
             Text(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(20.dp),
+                    .padding(10.dp),
                 fontSize = 24.sp,
-                text = userDetail.login.orEmpty(),
+                text = userDetail.login,
                 textAlign = TextAlign.Center
             )
             AsyncImage(
                 modifier = Modifier
+                    .padding(10.dp)
                     .width(200.dp)
                     .height(200.dp)
                     .clip(CircleShape),
+
                 model = userDetail.avatarUrl,
-                contentDescription = "avatar",
+                contentDescription = stringResource(R.string.user_details_content_description_avatar),
                 alignment = Alignment.Center
 
             )
-            ListTextItem("email :", userDetail.email)
-            ListTextItem("Name :", userDetail.name)
-            ListTextItem("Company:", userDetail.company)
-            ListTextItem("Location:", userDetail.location)
-            ListTextItem("Bio :", userDetail.bio)
-            ClickableUrlStringListItem("Blog :", userDetail.blog, openUrl)
-            ClickableUrlStringListItem("Repos :", userDetail.reposUrl, openUrl)
-            ListTextItem("Public repos :", (userDetail.publicRepos ?: 0).toString())
-            ListTextItem("Public gist :", (userDetail.publicGists ?: 0).toString())
+            ListTextItem(stringResource(R.string.user_details_email), userDetail.email)
+            ListTextItem(stringResource(R.string.user_details_name), userDetail.name)
+            ListTextItem(stringResource(R.string.user_details_company), userDetail.company)
+            ListTextItem(stringResource(R.string.user_details_location), userDetail.location)
+            ListTextItem(stringResource(R.string.user_details_bio), userDetail.bio)
+            ClickableUrlStringListItem(
+                stringResource(R.string.user_details_blog),
+                userDetail.blog,
+                openUrl
+            )
+            ClickableUrlStringListItem(
+                stringResource(R.string.user_details_repos),
+                userDetail.reposUrl,
+                openUrl
+            )
+            ListTextItem(
+                stringResource(R.string.user_details_public_repos),
+                (userDetail.publicRepos).toString()
+            )
+            ListTextItem(
+                stringResource(R.string.user_details_public_gist),
+                (userDetail.publicGists).toString()
+            )
 
         }
     }
@@ -167,14 +191,18 @@ private fun UserDetailScreenContent(
 }
 
 @Composable
-private fun ListTextItem(title: String, st: String?) {
-    if (!st.isNullOrEmpty()) {
+private fun ListTextItem(
+    title: String,
+    st: String
+) {
+    if (st.isNotEmpty()) {
         SelectionContainer {
             Row(
                 modifier = Modifier
                     .padding(top = 16.dp, start = 16.dp, end = 16.dp)
                     .fillMaxWidth()
-                    .wrapContentHeight()
+                    .wrapContentHeight(),
+                verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
                     text = title,
@@ -194,7 +222,8 @@ private fun ListTextItem(title: String, st: String?) {
 
 @Composable
 private fun ClickableUrlStringListItem(
-    title: String, st: String?,
+    title: String,
+    st: String?,
     openUrl: (String) -> Unit
 ) {
     if (!st.isNullOrEmpty()) {
@@ -212,7 +241,8 @@ private fun ClickableUrlStringListItem(
                 withStyle(
                     style = SpanStyle(
                         fontSize = 16.sp,
-                        textDecoration = TextDecoration.Underline
+                        textDecoration = TextDecoration.Underline,
+                        color = LocalContentColor.current
                     )
                 ) {
                     append(st)
@@ -255,37 +285,17 @@ private fun UserDetailScreenContentPreview() {
     )
 }
 
-private val testUserDetail = UserDetail(
-    avatarUrl = null,
+private val testUserDetail = UserDetailData(
+    avatarUrl = "avatarUrl",
     bio = "biography",
     blog = "blog url",
     company = "Company name",
-    createdAt = null,
     email = "email",
-    eventsUrl = null,
-    followers = null,
-    followersUrl = null,
-    following = null,
-    followingUrl = null,
-    gistsUrl = null,
-    gravatarId = null,
-    hireable = null,
-    htmlUrl = null,
-    id = null,
     location = "location",
     login = "UserName",
     name = "Real Name",
-    nodeId = null,
-    organizationsUrl = null,
     publicGists = 17,
     publicRepos = 10,
-    receivedEventsUrl = null,
     reposUrl = "reposUrl",
-    siteAdmin = null,
-    starredUrl = null,
-    subscriptionsUrl = null,
-    twitterUsername = null,
-    type = null,
-    updatedAt = null,
-    url = null
+    url = "userUrl"
 )

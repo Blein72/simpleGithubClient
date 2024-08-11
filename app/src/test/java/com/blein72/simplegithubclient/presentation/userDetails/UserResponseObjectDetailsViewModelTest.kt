@@ -3,6 +3,7 @@ package com.blein72.simplegithubclient.presentation.userDetails
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.blein72.simplegithubclient.data.UsersRepository
 import com.blein72.simplegithubclient.testdata.TEST_USER_DETAILS_DATA
+import com.blein72.simplegithubclient.testdata.TEST_USER_DETAILS_RESPONSE_DATA
 import com.blein72.simplegithubclient.util.Result
 import io.mockk.coEvery
 import io.mockk.coVerify
@@ -21,7 +22,7 @@ import org.junit.Rule
 import org.junit.Test
 
 @OptIn(ExperimentalCoroutinesApi::class)
-class UserDetailsViewModelTest {
+class UserResponseObjectDetailsViewModelTest {
     @get:Rule
     val instantTaskExecutorRule = InstantTaskExecutorRule()
 

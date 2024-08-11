@@ -1,7 +1,8 @@
 package com.blein72.simplegithubclient.data.datasource
 
-import com.blein72.simplegithubclient.testdata.TEST_USER_DETAILS_DATA
-import com.blein72.simplegithubclient.testdata.TEST_USER_LIST_DATA
+import com.blein72.simplegithubclient.data.datasource.api.UserApi
+import com.blein72.simplegithubclient.testdata.TEST_USER_DETAILS_RESPONSE_DATA
+import com.blein72.simplegithubclient.testdata.TEST_USER_RESPONSE_LIST_DATA
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
@@ -26,7 +27,7 @@ class UsersRemoteDataSourceImplTest {
     @Test
     fun `getUsersList should call API getUsersList and return proper response`() = runTest {
         // Given
-        val expectedResponse = Response.success(TEST_USER_LIST_DATA)
+        val expectedResponse = Response.success(TEST_USER_RESPONSE_LIST_DATA)
         coEvery { api.getUsersList() } returns expectedResponse
 
         // When
@@ -55,7 +56,7 @@ class UsersRemoteDataSourceImplTest {
     fun `getUserDetails should return response from api`() = runTest {
         // Given
         val userName = "userName"
-        val expectedResponse = Response.success(TEST_USER_DETAILS_DATA)
+        val expectedResponse = Response.success(TEST_USER_DETAILS_RESPONSE_DATA)
         coEvery { api.getUserDetails(userName) } returns expectedResponse
 
         // When
