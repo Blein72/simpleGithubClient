@@ -1,18 +1,2 @@
 <resources>
-    <string name="app_name">Simple github client</string>
-    <string name="user_details_top_bar_title">User Details</string>
-    <string name="user_details_email">Email :</string>
-    <string name="user_details_name">Name :</string>
-    <string name="user_details_company">Company:</string>
-    <string name="user_details_location">Location:</string>
-    <string name="user_details_bio">Bio :</string>
-    <string name="user_details_blog">Blog :</string>
-    <string name="user_details_repos">Repos :</string>
-    <string name="user_details_public_repos">Public repos :</string>
-    <string name="user_details_public_gist">Public gist :</string>
-    <string name="user_details_content_description_avatar">avatar</string>
-    <string name="user_details_content_description_back">Back</string>
-    <string name="basic_dialog_error_reload">Reload</string>
-    <string name="something_went_wrong_tou_can_try_to_reload_data_with_error">Something went wrong: %1$s. Tou can try to reload data</string>
-    <string name="user_list_content_description_avatar">avatar</string>
 </resources>
