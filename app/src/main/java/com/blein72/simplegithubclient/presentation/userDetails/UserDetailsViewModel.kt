@@ -3,7 +3,7 @@ package com.blein72.simplegithubclient.presentation.userDetails
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.blein72.simplegithubclient.data.UsersRepository
-import com.blein72.simplegithubclient.data.datasource.api.response.UserDetailResponseObject
+import com.blein72.simplegithubclient.data.datasource.remote.api.response.UserDetailResponseObject
 import com.blein72.simplegithubclient.data.model.UserDetailData
 import com.blein72.simplegithubclient.util.Result
 import dagger.hilt.android.lifecycle.HiltViewModel

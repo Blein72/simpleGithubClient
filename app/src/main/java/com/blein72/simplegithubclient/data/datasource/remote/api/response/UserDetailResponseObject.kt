@@ -1,4 +1,4 @@
-package com.blein72.simplegithubclient.data.datasource.api.response
+package com.blein72.simplegithubclient.data.datasource.remote.api.response
 
 
 import com.google.gson.annotations.SerializedName

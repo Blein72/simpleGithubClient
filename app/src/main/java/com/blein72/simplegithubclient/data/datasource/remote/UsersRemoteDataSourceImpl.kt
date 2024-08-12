@@ -1,8 +1,8 @@
-package com.blein72.simplegithubclient.data.datasource
+package com.blein72.simplegithubclient.data.datasource.remote
 
-import com.blein72.simplegithubclient.data.datasource.api.UserApi
-import com.blein72.simplegithubclient.data.datasource.api.response.UserDetailResponseObject
-import com.blein72.simplegithubclient.data.datasource.api.response.UserResponseObject
+import com.blein72.simplegithubclient.data.datasource.remote.api.UserApi
+import com.blein72.simplegithubclient.data.datasource.remote.api.response.UserDetailResponseObject
+import com.blein72.simplegithubclient.data.datasource.remote.api.response.UserResponseObject
 import retrofit2.Response
 
 const val USERS_PER_PAGE = 50 // 50

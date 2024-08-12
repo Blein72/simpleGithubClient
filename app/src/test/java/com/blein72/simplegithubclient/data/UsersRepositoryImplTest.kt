@@ -1,9 +1,12 @@
 package com.blein72.simplegithubclient.data
 
-import com.blein72.simplegithubclient.data.datasource.UsersRemoteDataSource
-import com.blein72.simplegithubclient.data.datasource.api.response.UserDetailResponseObject
-import com.blein72.simplegithubclient.data.datasource.api.response.UserResponseObject
+import com.blein72.simplegithubclient.data.datasource.local.UserLocalDataSource
+import com.blein72.simplegithubclient.data.datasource.remote.UsersRemoteDataSource
+import com.blein72.simplegithubclient.data.datasource.remote.api.response.UserDetailResponseObject
+import com.blein72.simplegithubclient.data.datasource.remote.api.response.UserResponseObject
+import com.blein72.simplegithubclient.testdata.TEST_USER_DATA
 import com.blein72.simplegithubclient.testdata.TEST_USER_DETAILS_DATA
+import com.blein72.simplegithubclient.testdata.TEST_USER_DETAILS_DATA_LOCAL
 import com.blein72.simplegithubclient.testdata.TEST_USER_DETAILS_RESPONSE_DATA
 import com.blein72.simplegithubclient.testdata.TEST_USER_LIST_DATA
 import com.blein72.simplegithubclient.testdata.TEST_USER_RESPONSE_LIST_DATA
@@ -24,11 +27,16 @@ import retrofit2.Response
 class UsersRepositoryImplTest {
 
     private val remoteDataSource: UsersRemoteDataSource = mockk()
+    private val localDataSource: UserLocalDataSource = mockk()
     private lateinit var usersRepository: UsersRepositoryImpl
 
     @Before
     fun setUp() {
-        usersRepository = UsersRepositoryImpl(remoteDataSource)
+        coEvery { localDataSource.getUserData(any()) } returns emptyList()
+        coEvery { localDataSource.saveUsersList(any()) } returns Unit
+        coEvery { localDataSource.saveUserDetailData(any()) } returns Unit
+        coEvery { localDataSource.getUserDetailData(any()) } returns null
+        usersRepository = UsersRepositoryImpl(remoteDataSource, localDataSource)
     }
 
     @Test
@@ -48,6 +56,28 @@ class UsersRepositoryImplTest {
             assertTrue(result is Result.Success)
             assertEquals(expectedResult, (result as Result.Success).data)
             coVerify { remoteDataSource.getUsersList(since) }
+            coVerify { localDataSource.getUserData(since) }
+        }
+
+    @Test
+    fun `getUsers should return Success with locally saved data if when localDataSource return non empty list`() =
+        runBlocking {
+            // Given
+            val expectedResult = listOf(TEST_USER_DATA)
+            val responseData = TEST_USER_RESPONSE_LIST_DATA
+            val response = Response.success(responseData)
+            val since = 10
+            coEvery { localDataSource.getUserData(any()) } returns listOf(TEST_USER_DATA)
+            coEvery { remoteDataSource.getUsersList(any()) } returns response
+
+            // When
+            val result = usersRepository.getUsers(since)
+
+            // Assert
+            assertTrue(result is Result.Success)
+            assertEquals(expectedResult, (result as Result.Success).data)
+            coVerify { localDataSource.getUserData(since) }
+            coVerify(exactly = 0) { remoteDataSource.getUsersList(since) }
         }
 
     @Test
@@ -100,6 +130,27 @@ class UsersRepositoryImplTest {
             assertTrue(result is Result.Success)
             assertEquals(expectedResult, (result as Result.Success).data)
             coVerify { remoteDataSource.getUserDetails(userName) }
+        }
+
+    @Test
+    fun `getUserDetails should return Success with locally saved data if when localDataSource return non null data`() =
+        runBlocking {
+            // Given
+            val userName = "userName"
+            val expectedResult = TEST_USER_DETAILS_DATA_LOCAL
+            val responseData = TEST_USER_DETAILS_RESPONSE_DATA
+            val response = Response.success(responseData)
+            coEvery { localDataSource.getUserDetailData(any()) } returns TEST_USER_DETAILS_DATA_LOCAL
+            coEvery { remoteDataSource.getUserDetails(userName) } returns response
+
+            // When
+            val result = usersRepository.getUserDetails(userName)
+
+            // Assert
+            assertTrue(result is Result.Success)
+            assertEquals(expectedResult, (result as Result.Success).data)
+            coVerify(exactly = 0) { remoteDataSource.getUserDetails(userName) }
+            coVerify { localDataSource.getUserDetailData(userName) }
         }
 
     @Test

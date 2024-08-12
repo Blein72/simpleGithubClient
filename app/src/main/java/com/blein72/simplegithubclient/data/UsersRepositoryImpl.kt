@@ -1,9 +1,7 @@
 package com.blein72.simplegithubclient.data
 
-import com.blein72.simplegithubclient.data.datasource.USERS_PER_PAGE
-import com.blein72.simplegithubclient.data.datasource.UsersRemoteDataSource
-import com.blein72.simplegithubclient.data.datasource.api.response.UserResponseObject
-import com.blein72.simplegithubclient.data.datasource.api.response.UserDetailResponseObject
+import com.blein72.simplegithubclient.data.datasource.local.UserLocalDataSource
+import com.blein72.simplegithubclient.data.datasource.remote.UsersRemoteDataSource
 import com.blein72.simplegithubclient.data.model.UserData
 import com.blein72.simplegithubclient.data.model.UserDetailData
 import com.blein72.simplegithubclient.data.model.toUserDataList
@@ -11,41 +9,57 @@ import com.blein72.simplegithubclient.data.model.toUserDetailData
 import com.blein72.simplegithubclient.util.NoBodyException
 import com.blein72.simplegithubclient.util.Result
 
-class UsersRepositoryImpl(private val remoteDataSource: UsersRemoteDataSource) : UsersRepository {
+class UsersRepositoryImpl(
+    private val remoteDataSource: UsersRemoteDataSource,
+    private val localDataSource: UserLocalDataSource
+) : UsersRepository {
 
     override suspend fun getUsers(latestId: Int): Result<List<UserData>> {
-        return try {
-            val response = remoteDataSource.getUsersList(since = latestId)
-            if (response.isSuccessful) {
-                val usersList = response.body()
-                if (usersList != null) {
-                    Result.Success(usersList.toUserDataList())
+        val localData = localDataSource.getUserData(startingId = latestId)
+        if (localData.isNotEmpty()) {
+            return Result.Success(localData)
+        } else {
+            return try {
+                val response = remoteDataSource.getUsersList(since = latestId)
+                if (response.isSuccessful) {
+                    val usersList = response.body()
+                    if (usersList != null) {
+                        val result = usersList.toUserDataList()
+                        localDataSource.saveUsersList(result)
+                        Result.Success(result)
+                    } else {
+                        Result.Error(NoBodyException)
+                    }
                 } else {
-                    Result.Error(NoBodyException)
+                    Result.Error(Exception("Failed with code: ${response.code()}"))
                 }
-            } else {
-                Result.Error(Exception("Failed with code: ${response.code()}"))
+            } catch (e: Exception) {
+                Result.Error(e)
             }
-        } catch (e: Exception) {
-            Result.Error(e)
         }
     }
 
     override suspend fun getUserDetails(name: String): Result<UserDetailData> {
-        return try {
-            val response = remoteDataSource.getUserDetails(name)
-            if (response.isSuccessful) {
-                val usersList = response.body()
-                if (usersList != null) {
-                    Result.Success(usersList.toUserDetailData())
+        val userdata = localDataSource.getUserDetailData(name)
+        if (userdata != null) {
+            return Result.Success(userdata)
+        } else {
+            return try {
+                val response = remoteDataSource.getUserDetails(name)
+                if (response.isSuccessful) {
+                    val userDetail = response.body()
+                    if (userDetail != null) {
+                        localDataSource.saveUserDetailData(userDetail.toUserDetailData())
+                        Result.Success(userDetail.toUserDetailData())
+                    } else {
+                        Result.Error(NoBodyException)
+                    }
                 } else {
-                    Result.Error(NoBodyException)
+                    Result.Error(Exception("Failed with code: ${response.code()}"))
                 }
-            } else {
-                Result.Error(Exception("Failed with code: ${response.code()}"))
+            } catch (e: Exception) {
+                Result.Error(e)
             }
-        } catch (e: Exception) {
-            Result.Error(e)
         }
     }
 }

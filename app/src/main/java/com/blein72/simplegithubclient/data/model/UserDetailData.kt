@@ -1,6 +1,6 @@
 package com.blein72.simplegithubclient.data.model
 
-import com.blein72.simplegithubclient.data.datasource.api.response.UserDetailResponseObject
+import com.blein72.simplegithubclient.data.datasource.remote.api.response.UserDetailResponseObject
 
 data class UserDetailData(
     val avatarUrl: String,

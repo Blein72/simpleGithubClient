@@ -1,6 +1,6 @@
 package com.blein72.simplegithubclient.data.model
 
-import com.blein72.simplegithubclient.data.datasource.api.response.UserResponseObject
+import com.blein72.simplegithubclient.data.datasource.remote.api.response.UserResponseObject
 
 data class UserData(
     val id: Int,

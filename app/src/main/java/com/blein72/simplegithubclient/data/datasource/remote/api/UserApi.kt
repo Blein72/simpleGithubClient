@@ -1,7 +1,7 @@
-package com.blein72.simplegithubclient.data.datasource.api
+package com.blein72.simplegithubclient.data.datasource.remote.api
 
-import com.blein72.simplegithubclient.data.datasource.api.response.UserDetailResponseObject
-import com.blein72.simplegithubclient.data.datasource.api.response.UserResponseObject
+import com.blein72.simplegithubclient.data.datasource.remote.api.response.UserDetailResponseObject
+import com.blein72.simplegithubclient.data.datasource.remote.api.response.UserResponseObject
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Path

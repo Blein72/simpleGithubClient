@@ -1,6 +1,8 @@
 package com.blein72.simplegithubclient.data.datasource
 
-import com.blein72.simplegithubclient.data.datasource.api.UserApi
+import com.blein72.simplegithubclient.data.datasource.remote.USERS_PER_PAGE
+import com.blein72.simplegithubclient.data.datasource.remote.UsersRemoteDataSourceImpl
+import com.blein72.simplegithubclient.data.datasource.remote.api.UserApi
 import com.blein72.simplegithubclient.testdata.TEST_USER_DETAILS_RESPONSE_DATA
 import com.blein72.simplegithubclient.testdata.TEST_USER_RESPONSE_LIST_DATA
 import io.mockk.coEvery
