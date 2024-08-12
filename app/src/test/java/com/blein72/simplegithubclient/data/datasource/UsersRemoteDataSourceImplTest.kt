@@ -28,14 +28,15 @@ class UsersRemoteDataSourceImplTest {
     fun `getUsersList should call API getUsersList and return proper response`() = runTest {
         // Given
         val expectedResponse = Response.success(TEST_USER_RESPONSE_LIST_DATA)
-        coEvery { api.getUsersList() } returns expectedResponse
+        val since = 10
+        coEvery { api.getUsersList(any(), any()) } returns expectedResponse
 
         // When
-        val actualResponse = usersRemoteDataSource.getUsersList()
+        val actualResponse = usersRemoteDataSource.getUsersList(since)
 
         // Assert
         assertEquals(expectedResponse, actualResponse)
-        coVerify { api.getUsersList() }
+        coVerify { api.getUsersList(perPage = USERS_PER_PAGE, since = since) }
     }
 
     @Test(expected = Exception::class)
@@ -43,13 +44,19 @@ class UsersRemoteDataSourceImplTest {
         runTest {
             // Given
             val expectedResponse = Exception("something went wrong")
-            coEvery { api.getUsersList() } throws expectedResponse
+            val since = 10
+            coEvery { api.getUsersList(any(), any()) } throws expectedResponse
 
             // When
-            usersRemoteDataSource.getUsersList()
+            usersRemoteDataSource.getUsersList(since)
 
             // Assert
-            coVerify { api.getUsersList() }
+            coVerify {
+                api.getUsersList(
+                    perPage = USERS_PER_PAGE,
+                    since = since
+                )
+            }
         }
 
     @Test
@@ -79,6 +86,6 @@ class UsersRemoteDataSourceImplTest {
             usersRemoteDataSource.getUserDetails(userName)
 
             // Assert
-            coVerify { api.getUsersList() }
+            coVerify { api.getUserDetails(userName) }
         }
 }

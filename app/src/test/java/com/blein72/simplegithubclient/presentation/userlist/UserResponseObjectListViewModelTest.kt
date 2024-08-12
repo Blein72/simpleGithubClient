@@ -3,7 +3,6 @@ package com.blein72.simplegithubclient.presentation.userlist
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.blein72.simplegithubclient.data.UsersRepository
 import com.blein72.simplegithubclient.testdata.TEST_USER_LIST_DATA
-import com.blein72.simplegithubclient.testdata.TEST_USER_RESPONSE_LIST_DATA
 import com.blein72.simplegithubclient.util.Result
 import io.mockk.coEvery
 import io.mockk.coVerify
@@ -44,43 +43,43 @@ class UserResponseObjectListViewModelTest {
     }
 
     @Test
-    fun `getUserList should update state with user list when repository returns success`() = runTest {
+    fun `getInitialData() should update state with user list when repository returns success`() = runTest {
         // Given
         val userList = TEST_USER_LIST_DATA
-        coEvery { repository.getUsers() } returns Result.Success(userList)
+        coEvery { repository.getUsers(any()) } returns Result.Success(userList)
 
         // When
-        viewModel.getUserList()
+        viewModel.getInitialData()
 
         // Advance the dispatcher to ensure all coroutines complete
         advanceUntilIdle()
 
         // Assert
         val state = viewModel.state.value
-        assertFalse(state.showLoading)
+        assertFalse(state.showScreenLoading)
         assertEquals(userList, state.userList)
         assertFalse(state.showErrorDialog)
-        coVerify { repository.getUsers() }
+        coVerify { repository.getUsers(0) }
     }
 
     @Test
     fun `getUserList should show error dialog when repository returns error`() = runTest {
         // Given
         val exception = Exception("something went wrong")
-        coEvery { repository.getUsers() } returns Result.Error(exception)
+        coEvery { repository.getUsers(any()) } returns Result.Error(exception)
 
         // When
-        viewModel.getUserList()
+        viewModel.getInitialData()
 
         // Advance the dispatcher to ensure all coroutines complete
         advanceUntilIdle()
 
         // Assert
         val state = viewModel.state.value
-        assertFalse(state.showLoading)
+        assertFalse(state.showScreenLoading)
         assertTrue(state.showErrorDialog)
         assertEquals(exception.toString(), state.errorMessage)
-        coVerify { repository.getUsers() }
+        coVerify { repository.getUsers(0) }
     }
 
     @Test

@@ -47,6 +47,8 @@ import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.blein72.simplegithubclient.R
 import com.blein72.simplegithubclient.data.model.UserDetailData
+import com.blein72.simplegithubclient.presentation.composable.ErrorDialog
+import com.blein72.simplegithubclient.presentation.composable.ScreenLoadingIndicator
 
 const val USER_DETAIL_SCREEN_PATH = "users_list"
 
@@ -74,47 +76,18 @@ fun UserDetailsScreen(
     )
 
     if (state.showLoading) {
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-        ) {
-            CircularProgressIndicator(
-                modifier = Modifier
-                    .width(64.dp)
-                    .align(Alignment.Center),
-                color = MaterialTheme.colorScheme.secondary,
-                trackColor = MaterialTheme.colorScheme.surfaceVariant,
-            )
-        }
+        ScreenLoadingIndicator()
     }
 
     if (state.showErrorDialog) {
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-        ) {
-            Column(
-                modifier = Modifier
-                    .align(Alignment.Center)
-            ) {
-                Text(
-                    text = stringResource(
-                        R.string.something_went_wrong_tou_can_try_to_reload_data_with_error,
-                        state.errorMessage.orEmpty()
-                    )
-                )
-                Button(
-                    onClick = {
-                        viewModel.getUserDetail(userName)
-                        viewModel.hideErrorDialog()
-                    }
-                ) {
-                    Text(text = stringResource(R.string.basic_dialog_error_reload))
-                }
+        ErrorDialog(
+            errorText = state.errorMessage.orEmpty(),
+            onReloadClicked = {
+                viewModel.getUserDetail(userName)
+                viewModel.hideErrorDialog()
             }
-        }
+        )
     }
-
 }
 
 @OptIn(ExperimentalMaterial3Api::class)

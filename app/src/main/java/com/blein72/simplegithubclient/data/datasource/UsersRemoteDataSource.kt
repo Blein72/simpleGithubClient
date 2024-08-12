@@ -6,6 +6,6 @@ import retrofit2.Response
 
 interface UsersRemoteDataSource {
 
-    suspend fun getUsersList(): Response<List<UserResponseObject>>
+    suspend fun getUsersList(since:Int): Response<List<UserResponseObject>>
     suspend fun getUserDetails(userName: String): Response<UserDetailResponseObject>
 }

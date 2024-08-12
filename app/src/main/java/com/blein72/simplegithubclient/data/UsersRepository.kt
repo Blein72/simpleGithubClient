@@ -8,6 +8,6 @@ import com.blein72.simplegithubclient.util.Result
 
 interface UsersRepository {
 
-    suspend fun getUsers(): Result<List<UserData>>
+    suspend fun getUsers(latestId: Int): Result<List<UserData>>
     suspend fun getUserDetails(name: String): Result<UserDetailData>
 }

@@ -8,50 +8,60 @@ import com.blein72.simplegithubclient.data.model.UserDetailData
 val TEST_USER_RESPONSE_DATA = UserResponseObject(
     avatarUrl = "avatarUrl",
     login = "Name",
-    url = "profileUrl"
+    url = "profileUrl",
+    id = 1
 )
 
 val TEST_USER_DATA = UserData(
     avatarUrl = "avatarUrl",
     login = "Name",
-    url = "profileUrl"
+    url = "profileUrl",
+    id = 1
 )
 
-val TEST_USER_RESPONSE_LIST_DATA =listOf(
+val TEST_USER_RESPONSE_LIST_DATA = listOf(
     TEST_USER_RESPONSE_DATA.copy(
         login = "Name1",
-        url = "ProfileUrl1"
+        url = "ProfileUrl1",
+        id = 1
     ),
     TEST_USER_RESPONSE_DATA.copy(
         login = "Name2",
-        url = "ProfileUrl2"
+        url = "ProfileUrl2",
+        id = 2
     ),
     TEST_USER_RESPONSE_DATA.copy(
         login = "Name3",
-        url = "ProfileUrl3"
+        url = "ProfileUrl3",
+        id = 3
     ),
     TEST_USER_RESPONSE_DATA.copy(
         login = "Name4",
-        url = "ProfileUrl4"
+        url = "ProfileUrl4",
+        id = 4
     )
 )
 
-val TEST_USER_LIST_DATA =listOf(
+val TEST_USER_LIST_DATA = listOf(
     TEST_USER_DATA.copy(
         login = "Name1",
-        url = "ProfileUrl1"
+        url = "ProfileUrl1",
+        id = 1
     ),
     TEST_USER_DATA.copy(
         login = "Name2",
-        url = "ProfileUrl2"
+        url = "ProfileUrl2",
+        id = 2
     ),
     TEST_USER_DATA.copy(
         login = "Name3",
-        url = "ProfileUrl3"
+        url = "ProfileUrl3",
+        id = 3
     ),
     TEST_USER_DATA.copy(
         login = "Name4",
-        url = "ProfileUrl4"
+        url = "ProfileUrl4",
+        id = 4
     )
 )
 

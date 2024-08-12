@@ -3,7 +3,6 @@ package com.blein72.simplegithubclient.presentation.userlist
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.blein72.simplegithubclient.data.UsersRepository
-import com.blein72.simplegithubclient.data.datasource.api.response.UserResponseObject
 import com.blein72.simplegithubclient.data.model.UserData
 import com.blein72.simplegithubclient.util.Result
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -19,33 +18,55 @@ class UserListViewModel @Inject constructor(
     private val repository: UsersRepository,
     private val dispatcher: CoroutineDispatcher
 ) : ViewModel() {
-
     private val _state = MutableStateFlow(State())
     val state = _state.asStateFlow()
 
-    fun getUserList() {
+    private var queryParam = QueryState()
+
+    fun getInitialData() {
+        getUserList(showScreenLoading = true)
+    }
+
+    fun loadNextPage() {
+        getUserList(showScreenLoading = false)
+    }
+
+    fun reloadCurrentPage() {
+        getUserList(showScreenLoading = false)
+    }
+
+    private fun getUserList(showScreenLoading: Boolean) {
         viewModelScope.launch(dispatcher) {
-            _state.update { data ->
-                data.copy(
-                    showLoading = true
-                )
+            if (showScreenLoading) {
+                _state.update { data ->
+                    data.copy(
+                        showScreenLoading = true
+                    )
+                }
+            } else {
+                _state.update { data ->
+                    data.copy(showListItemsLoading = true)
+                }
             }
-            val result = repository.getUsers()
+
+            val result = repository.getUsers(queryParam.latestId)
             when (result) {
                 is Result.Error -> {
                     showErrorDialog(result.exception.toString())
                 }
 
                 is Result.Success -> {
+                    queryParam = queryParam.copy(latestId = result.data.last().id)
+                    val list = _state.value.userList + result.data
                     _state.update { data ->
                         data.copy(
-                            showLoading = false,
-                            userList = result.data
+                            showScreenLoading = false,
+                            showListItemsLoading = false,
+                            userList = list
                         )
                     }
                 }
             }
-
         }
     }
 
@@ -60,7 +81,8 @@ class UserListViewModel @Inject constructor(
     private fun showErrorDialog(error: String) {
         _state.update { data ->
             data.copy(
-                showLoading = false,
+                showScreenLoading = false,
+                showListItemsLoading = false,
                 showErrorDialog = true,
                 errorMessage = error
             )
@@ -68,9 +90,14 @@ class UserListViewModel @Inject constructor(
     }
 
     data class State(
-        val showLoading: Boolean = false,
+        val showScreenLoading: Boolean = false,
+        val showListItemsLoading: Boolean = false,
         val userList: List<UserData> = emptyList(),
         val showErrorDialog: Boolean = false,
         val errorMessage: String? = null
+    )
+
+    data class QueryState(
+        val latestId: Int = 0
     )
 }

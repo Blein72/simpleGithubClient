@@ -11,6 +11,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
@@ -18,7 +20,9 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -31,6 +35,8 @@ import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
 import com.blein72.simplegithubclient.R
 import com.blein72.simplegithubclient.data.model.UserData
+import com.blein72.simplegithubclient.presentation.composable.ErrorDialog
+import com.blein72.simplegithubclient.presentation.composable.ScreenLoadingIndicator
 import com.blein72.simplegithubclient.presentation.userDetails.USER_DETAIL_SCREEN_PATH
 
 
@@ -44,65 +50,60 @@ fun UserListScreen(
     val state by viewModel.state.collectAsStateWithLifecycle()
 
     LaunchedEffect(Unit) {
-        viewModel.getUserList()
+        viewModel.getInitialData()
+    }
+
+    val listState = rememberLazyListState()
+
+    // Check if the user has scrolled to the end
+    val isEndReached by remember {
+        derivedStateOf {
+            val lastVisibleItem = listState.layoutInfo.visibleItemsInfo.lastOrNull()
+            lastVisibleItem?.index != 0 && lastVisibleItem?.index == listState.layoutInfo.totalItemsCount - 1
+        }
+    }
+
+    // Load more data when end is reached
+    LaunchedEffect(isEndReached) {
+        if (isEndReached) {
+            viewModel.loadNextPage()
+        }
     }
 
     UserListScreenContent(
+        listState = listState,
+        showListLoading = state.showListItemsLoading,
         userList = state.userList,
         onItemClicked = { name ->
             navController.navigate("$USER_DETAIL_SCREEN_PATH/$name")
         }
     )
 
-    if (state.showLoading) {
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-        ) {
-            CircularProgressIndicator(
-                modifier = Modifier
-                    .width(64.dp)
-                    .align(Alignment.Center),
-                color = MaterialTheme.colorScheme.secondary,
-                trackColor = MaterialTheme.colorScheme.surfaceVariant,
-            )
-        }
+    if (state.showScreenLoading) {
+        ScreenLoadingIndicator()
     }
 
     if (state.showErrorDialog) {
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-        ) {
-            Column(
-                modifier = Modifier
-                    .align(Alignment.Center)
-            ) {
-                Text(
-                    text = stringResource(
-                        R.string.something_went_wrong_tou_can_try_to_reload_data_with_error,
-                        state.errorMessage.orEmpty()
-                    )
-                )
-                Button(
-                    onClick = {
-                        viewModel.getUserList()
-                        viewModel.hideErrorDialog()
-                    }
-                ) {
-                    Text(text = stringResource(R.string.basic_dialog_error_reload))
-                }
+        ErrorDialog(
+            errorText = state.errorMessage.orEmpty(),
+            onReloadClicked = {
+                viewModel.reloadCurrentPage()
+                viewModel.hideErrorDialog()
             }
-        }
+        )
     }
 }
 
 @Composable
 private fun UserListScreenContent(
+    listState: LazyListState,
     userList: List<UserData>,
+    showListLoading: Boolean,
     onItemClicked: (String?) -> Unit
 ) {
+
     LazyColumn(
+        state = listState,
         modifier = Modifier
             .fillMaxSize()
     ) {
@@ -112,6 +113,19 @@ private fun UserListScreenContent(
                 user = item,
                 onItemClicked = onItemClicked
             )
+        }
+        if (showListLoading) {
+            item {
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(50.dp)
+                        .padding(start = 16.dp, end = 16.dp),
+                    contentAlignment = Alignment.Center
+                ) {
+                    CircularProgressIndicator()
+                }
+            }
         }
     }
 }
@@ -178,7 +192,9 @@ private fun UserListScreenPreview() {
                 url = "ProfileUrl4"
             )
         ),
-        onItemClicked = {}
+        onItemClicked = {},
+        listState = rememberLazyListState(),
+        showListLoading = true
     )
 }
 
@@ -194,5 +210,6 @@ private fun UserListItemPreview() {
 private val testUserData = UserData(
     avatarUrl = "avatarUrl",
     login = "Name",
-    url = "profileUrl"
+    url = "profileUrl",
+    id = 1
 )
