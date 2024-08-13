@@ -21,4 +21,6 @@ dependencyResolutionManagement {
 
 rootProject.name = "Simple github client"
 include(":app")
- 
+include(":local-db")
+include(":core")
+include(":feature-users")

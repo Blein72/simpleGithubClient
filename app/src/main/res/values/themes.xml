@@ -1,5 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <!--Light theme-->
     <style name="Theme.SimpleGithubClient" parent="android:Theme.Material.Light.NoActionBar" />
+
+    <!--Dark theme-->
+    <style name="Theme.SimpleGithubClient.Dark" parent="android:Theme.Material">
+        <item name="android:colorBackground">#121212</item>
+        <item name="android:textColorPrimary">#FFFFFF</item>
+        <item name="android:textColorSecondary">#BBBBBB</item>
+    </style>
 </resources>

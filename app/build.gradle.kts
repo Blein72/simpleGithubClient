@@ -49,10 +49,11 @@ android {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
     }
-
 }
 
 dependencies {
+    implementation(project(":core"))
+    implementation(project(":feature-users"))
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
@@ -62,10 +63,14 @@ dependencies {
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
+    implementation(libs.androidx.junit.ktx)
+    implementation(libs.androidx.runner)
+    implementation(libs.androidx.room.ktx)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.ui.test.junit4)
+    androidTestImplementation(libs.androidx.core.testing)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
     implementation(libs.androidx.lifecycle.runtime.ktx.v261)
@@ -74,8 +79,7 @@ dependencies {
     //gson
     implementation(libs.gson)
     implementation(libs.converter.gson)
-    // retrofit
-    implementation(libs.retrofit)
+
     // Logging interceptor
     implementation(libs.logging.interceptor)
 
@@ -85,12 +89,5 @@ dependencies {
     implementation(libs.androidx.hilt.navigation.compose)
     implementation(libs.androidx.navigation.compose)
 
-    // coil
-    implementation(libs.coil.compose)
 
-    // testing
-    testImplementation(libs.mockk)
-    testImplementation(libs.kotlinx.coroutines.test)
-    testImplementation(libs.junit)
-    testImplementation(libs.androidx.core.testing)
 }

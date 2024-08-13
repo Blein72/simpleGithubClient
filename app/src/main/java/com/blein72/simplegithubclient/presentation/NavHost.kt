@@ -6,10 +6,10 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
-import com.blein72.simplegithubclient.presentation.userDetails.USER_DETAIL_SCREEN_PATH
-import com.blein72.simplegithubclient.presentation.userDetails.UserDetailsScreen
-import com.blein72.simplegithubclient.presentation.userlist.USER_LIST_SCREEN_PATH
-import com.blein72.simplegithubclient.presentation.userlist.UserListScreen
+import com.blein72.core.util.USER_DETAIL_SCREEN_PATH
+import com.blein72.core.util.USER_LIST_SCREEN_PATH
+import com.blein72.feature_users.presentation.userlist.UserListScreen
+import com.blein72.feature_users.presentation.userDetails.UserDetailsScreen
 
 @Composable
 fun AppNavHost(navController: NavHostController) {
@@ -18,12 +18,13 @@ fun AppNavHost(navController: NavHostController) {
             UserListScreen(navController)
         }
         composable(
-            route = "$USER_DETAIL_SCREEN_PATH/{userName}",
+            route = "${USER_DETAIL_SCREEN_PATH}/{userName}",
             arguments = listOf(navArgument("userName") { type = NavType.StringType })
         ) {navBackStackEntry ->
             UserDetailsScreen(
                 userName = navBackStackEntry.arguments?.getString("userName").orEmpty(),
-                navController = navController)
+                navController = navController
+            )
         }
     }
 }
